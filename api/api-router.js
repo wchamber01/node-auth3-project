@@ -9,7 +9,7 @@ const Users = require("../users/users-model.js");
 //for endpoints beginnings with /api
 router.post("/register", (req, res) => {
   let user = req.body;
-  const hash = bcrypt.hashSync(user.password, 10);
+  const hash = bcrypt.hashSync(user.password, 3);
   user.password = hash;
 
   Users.add(user)
@@ -24,10 +24,11 @@ router.post("/register", (req, res) => {
 
 router.post("/login", (req, res) => {
   let { userName, password } = req.body;
-
-  Users.findBy({ userName })
+  //console.log(password, "password line 27");
+  Users.findBy(userName)
     .first()
     .then(user => {
+      //console.log(user, "user line 31");
       if (user && bcrypt.compareSync(password, user.password)) {
         const token = signToken(user);
 
@@ -44,11 +45,13 @@ router.post("/login", (req, res) => {
 
 function signToken(user) {
   const payload = {
-    user
+    id: user.id,
+    name: user.userName,
+    department: user.department
   };
 
   const options = {
-    expiresIn: "30min"
+    expiresIn: "8h"
   };
   return jwt.sign(payload, jwtSecret, options);
 }
