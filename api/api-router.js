@@ -25,7 +25,7 @@ router.post("/register", (req, res) => {
 router.post("/login", (req, res) => {
   let { userName, password } = req.body;
   //console.log(password, "password line 27");
-  Users.findBy(userName)
+  Users.findByUser(userName)
     .first()
     .then(user => {
       //console.log(user, "user line 31");
