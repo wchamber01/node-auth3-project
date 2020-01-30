@@ -12,4 +12,13 @@ router.get("/", restricted, (req, res) => {
     .catch(err => res.send(err));
 });
 
+router.get("/bydept", restricted, (req, res) => {
+  //console.log(req.user);
+  Users.findBy(req.user.department)
+    .then(users => {
+      res.json(users);
+    })
+    .catch(err => res.send(err));
+});
+
 module.exports = router;
